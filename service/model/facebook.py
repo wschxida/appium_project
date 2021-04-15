@@ -3,39 +3,32 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time
-import base64
-import logging
-import os
-
-
-# 日志记录
-logger = logging.getLogger()
-logger.setLevel('INFO')
-
-BASIC_FORMAT = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
-DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
-formatter = logging.Formatter(BASIC_FORMAT, DATE_FORMAT)
-
-# logFile = 'twitter_get_guest_token.log'
-# fl_handler = RotatingFileHandler(logFile, mode='a', maxBytes=5*1024*1024, backupCount=2, encoding='utf-8', delay=0)
-# fl_handler.setFormatter(formatter)
-
-stream = logging.StreamHandler()  # 输出到控制台的handler
-stream.setFormatter(formatter)
-stream.setLevel('INFO')
-
-# logger.addHandler(fl_handler)
-logger.addHandler(stream)
-
-cur_path = os.path.dirname(os.path.realpath(__file__))
-cfg_path = os.path.join(cur_path, '..', "config.ini")  # 读取到本机的配置文件
 
 
 def start_appium():
-    # 模拟器
+    # 雷电模拟器
     # desired_caps = {
     #     'platformName': 'Android',
-    #     'deviceName': 'yeshen',
+    #     'deviceName': 'emulator-5554',
+    #     'appPackage': 'com.tencent.mtt.x86',
+    #     'appActivity': '.MainActivity',
+    #     'platformVersion': '7',
+    #     'newCommandTimeout': 6000,
+    #     'noReset': True,
+    #     'unicodeKeyboard': True,
+    #     'autoGrantPermissions': True,
+    #     'resetKeyboard': True,
+    #     'fullReset': False,
+    #     # 直接指定浏览器名称参数为chrome【重点添加了这一步】
+    #     # 'browserName': 'chrome',
+    #     # 使用指定的浏览器驱动-匹配手机上的谷歌浏览器
+    #     # 'chromedriverExecutable': r'E:/python_project/appium_project/service/model/chromedriver_dir/chromedriver_89.exe'
+    # }
+
+    # 夜神
+    # desired_caps = {
+    #     'platformName': 'Android',
+    #     'deviceName': 'SM_G977N',
     #     'appPackage': 'com.android.chrome',
     #     'appActivity': 'com.google.android.apps.chrome.Main',
     #     'platformVersion': '7',
@@ -57,6 +50,8 @@ def start_appium():
         'deviceName': 'Redmi_Note_7',
         'appPackage': 'com.android.chrome',
         'appActivity': 'com.google.android.apps.chrome.Main',
+        # 'appPackage': 'com.facebook.katana',
+        # 'appActivity': '.activity.FbMainTabActivity',
         'platformVersion': '10',
         'newCommandTimeout': 6000,
         'noReset': True,
@@ -64,36 +59,38 @@ def start_appium():
         'autoGrantPermissions': True,
         'resetKeyboard': True,
         'fullReset': False,
-        'chromedriverExecutable': r'E:/python_project/appium_project/service/model/chromedriver_dir/chromedriver_81.exe'
+        'chromedriverExecutable': r'E:/python_project/page_agent_queue_service/cloud_service/chromedriver_dir/chromedriver_81.exe'
     }
 
     driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
     driver.implicitly_wait(10)
 
-    driver.get('https://m.facebook.com/benger.won')
+    driver.get("http://facebook.com/")
     time.sleep(2)
+    # # driver.get("http://m.facebook.com/?soft=search")
+    # # 输入字段
+    driver.find_element_by_xpath('.//*[@text="Search Search"]').click()
+    time.sleep(1)
+    driver.find_element_by_xpath('.//*[@resource-id="main-search-input"]').send_keys("https://www.facebook.com/guosha.san")
+    driver.press_keycode(66)  # 回车
+    time.sleep(3)
+
     # 屏幕宽
     width = driver.get_window_size()['width']
     # 屏幕高
     height = driver.get_window_size()['height']
-    # 滑动
-    for i in range(2):
-        driver.swipe(width * 0.5, height * 0.9, width * 0.5, height * 0.1, 1000)
-        WebDriverWait(driver, 3)
-        time.sleep(1)
 
-    # # 查看context的名称
-    # print(driver.contexts)
-    # # 当前处于哪个context?
-    # print(driver.current_context)
-    #
-    # driver.switch_to.context('WEBVIEW_chrome')
-    # print(driver.current_context)
+    print(width, height)
+    x1 = int(0.37 * width)
+    y1 = int(0.4 * height)
+    print(x1, y1)
+    driver.tap([(x1, y1)], 0)
+    time.sleep(5)
+
     contexts = driver.contexts
     print(contexts)
     driver.switch_to.context(contexts[1])
 
-    # driver.find_element_by_xpath('.//*[@content-desc="网页视图"]').click()
     # 获取页面html，并保存到本地
     page_html = driver.page_source
     print(page_html)
