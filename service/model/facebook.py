@@ -26,24 +26,24 @@ def start_appium():
     #     'chromedriverExecutable': r'E:/python_project/appium_project/service/model/chromedriver_dir/chromedriver_89.exe'
     # }
 
-    # 夜神
-    desired_caps = {
-        'platformName': 'Android',
-        'deviceName': 'SM_G977N',
-        'appPackage': 'com.android.chrome',
-        'appActivity': 'com.google.android.apps.chrome.Main',
-        'platformVersion': '7',
-        'newCommandTimeout': 6000,
-        'noReset': True,
-        'unicodeKeyboard': True,
-        'autoGrantPermissions': True,
-        'resetKeyboard': True,
-        'fullReset': False,
-        # 直接指定浏览器名称参数为chrome【重点添加了这一步】
-        # 'browserName': 'Chrome',
-        # 使用指定的浏览器驱动-匹配手机上的谷歌浏览器
-        'chromedriverExecutable': r'E:/python_project/appium_project/service/model/chromedriver_dir/chromedriver_90.exe'
-    }
+    # # 夜神
+    # desired_caps = {
+    #     'platformName': 'Android',
+    #     'deviceName': 'SM_G977N',
+    #     'appPackage': 'com.android.chrome',
+    #     'appActivity': 'com.google.android.apps.chrome.Main',
+    #     'platformVersion': '4',
+    #     'newCommandTimeout': 6000,
+    #     'noReset': True,
+    #     'unicodeKeyboard': True,
+    #     'autoGrantPermissions': True,
+    #     'resetKeyboard': True,
+    #     'fullReset': False,
+    #     # 直接指定浏览器名称参数为chrome【重点添加了这一步】
+    #     # 'browserName': 'Chrome',
+    #     # 使用指定的浏览器驱动-匹配手机上的谷歌浏览器
+    #     'chromedriverExecutable': r'E:/python_project/appium_project/service/model/chromedriver_dir/chromedriver_90.exe'
+    # }
 
     # # 手机
     # desired_caps = {
@@ -62,6 +62,25 @@ def start_appium():
     #     'fullReset': False,
     #     'chromedriverExecutable': r'E:/python_project/page_agent_queue_service/cloud_service/chromedriver_dir/chromedriver_81.exe'
     # }
+
+    # 逍遥
+    desired_caps = {
+        'platformName': 'Android',
+        'deviceName': 'VOG-AL00',
+        'appPackage': 'com.android.browser',
+        'appActivity': '.BrowserActivity',
+        'platformVersion': '7',
+        'newCommandTimeout': 6000,
+        'noReset': True,
+        'unicodeKeyboard': True,
+        'autoGrantPermissions': True,
+        'resetKeyboard': True,
+        'fullReset': False,
+        # 直接指定浏览器名称参数为chrome【重点添加了这一步】
+        # 'browserName': 'Chrome',
+        # 使用指定的浏览器驱动-匹配手机上的谷歌浏览器
+        # 'chromedriverExecutable': r'E:/python_project/appium_project/service/model/chromedriver_dir/chromedriver_90.exe'
+    }
 
     driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
     driver.implicitly_wait(10)
@@ -92,12 +111,14 @@ def start_appium():
     width = driver.get_window_size()['width']
     # 屏幕高
     height = driver.get_window_size()['height']
-    driver.swipe(width * 0.5, height * 0.9, width * 0.5, height * 0.1, 1000)
-    WebDriverWait(driver, 2)
+    for i in range(3):
+        driver.swipe(width * 0.5, height * 0.9, width * 0.5, height * 0.1, 1000)
+        WebDriverWait(driver, 2)
 
     contexts = driver.contexts
     print(contexts)
     driver.switch_to.context(contexts[1])
+    time.sleep(10)
 
     # 获取页面html，并保存到本地
     page_html = driver.page_source
